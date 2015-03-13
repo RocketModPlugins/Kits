@@ -21,16 +21,16 @@ namespace unturned.ROCKS.Kits
         {
             if (String.IsNullOrEmpty(command.Trim()))
             {
-                RocketChatManager.Say(caller.CSteamID, "Invalid parameter, specify a kit with /kit <name>");
+                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_invalid_parameter"));
                 return;
             }
 
             if (!RocketCommand.IsPlayer(caller)) return;
 
-            Kit kit = Kits.Configuration.Kits.Where(k => k.Name.ToLower() == command.Trim().ToLower()).FirstOrDefault();
+            Kit kit = Kits.Instance.Configuration.Kits.Where(k => k.Name.ToLower() == command.Trim().ToLower()).FirstOrDefault();
             if (kit == null)
             {
-                RocketChatManager.Say(caller.CSteamID, "Kit not found");
+                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_not_found"));
                 return;
             }
 
@@ -39,16 +39,16 @@ namespace unturned.ROCKS.Kits
 
             if (!hasPermissions)
             {
-                RocketChatManager.Say(caller.CSteamID, "You don't have permissions to use this kit");
+                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_no_permissions"));
                 return;
             }
 
             KitsPlayerComponent kp = player.transform.GetComponent<KitsPlayerComponent>();
 
             double gt = (DateTime.Now - kp.GlobalKitCooldown).TotalSeconds;
-            if (gt < Kits.Configuration.GlobalCooldown)
+            if (gt < Kits.Instance.Configuration.GlobalCooldown)
             {
-                RocketChatManager.Say(caller.CSteamID, "You have to wait " + (int)(Kits.Configuration.GlobalCooldown - gt) + " seconds to use this command again");
+                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.GlobalCooldown - gt)));
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace unturned.ROCKS.Kits
             double kt = (DateTime.Now - kitCooldown).TotalSeconds;
             if (gt < kit.Cooldown)
             {
-                RocketChatManager.Say(caller.CSteamID, "You have to wait " + (int)(kit.Cooldown - gt) + " seconds to get this kit again");
+                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - gt)));
                 return;
             }
 
@@ -65,15 +65,12 @@ namespace unturned.ROCKS.Kits
             {
                 if (!ItemTool.tryForceGiveItem(player, item.ItemId, item.Amount))
                 {
-                    Logger.Log("Failed giving a item to " + caller.CharacterName + " (" + item.ItemId + "," + item.Amount + ")");
+                    Logger.Log(Kits.Instance.Translate("command_kit_failed_giving_item", caller.CharacterName, item.ItemId, item.Amount));
                 }
             }
-            RocketChatManager.Say(caller.CSteamID, "You just received the kit " + kit.Name);
+            RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_success", kit.Name));
             kp.SpecificKitCooldown[kit.Name] = DateTime.Now;
             kp.GlobalKitCooldown = DateTime.Now;
-
-            
-
 
         }
     }
