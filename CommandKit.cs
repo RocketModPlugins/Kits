@@ -43,22 +43,26 @@ namespace unturned.ROCKS.Kits
                 return;
             }
 
-            KitsPlayerComponent kp = player.transform.GetComponent<KitsPlayerComponent>();
-
-            double gt = (DateTime.Now - kp.GlobalKitCooldown).TotalSeconds;
-            if (gt < Kits.Instance.Configuration.GlobalCooldown)
+            KeyValuePair<string, DateTime> globalCooldown = Kits.GlobalCooldown.Where(k => k.Key == caller.CSteamID.ToString()).FirstOrDefault();
+            if (!globalCooldown.Equals(default(KeyValuePair<string, DateTime>)))
             {
-                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.GlobalCooldown - gt)));
-                return;
+                double globalCooldownSeconds = (DateTime.Now - globalCooldown.Value).TotalSeconds;
+                if (globalCooldownSeconds < Kits.Instance.Configuration.GlobalCooldown)
+                {
+                    RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.GlobalCooldown - globalCooldownSeconds)));
+                    return;
+                }
             }
 
-            DateTime kitCooldown = kp.SpecificKitCooldown.ContainsKey(kit.Name.ToLower()) ? kp.SpecificKitCooldown[kit.Name] : DateTime.MinValue;
-
-            double kt = (DateTime.Now - kitCooldown).TotalSeconds;
-            if (gt < kit.Cooldown)
+            KeyValuePair<string, IndividualKitCooldown> individualCooldown = Kits.InvididualCooldown.Where(k => k.Key == caller.CSteamID.ToString() && k.Value.Kit == kit.Name).FirstOrDefault();
+            if (!individualCooldown.Equals(default(KeyValuePair<string, IndividualKitCooldown>)))
             {
-                RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - gt)));
-                return;
+                double individualCooldownSeconds = (DateTime.Now - individualCooldown.Value.Cooldown).TotalSeconds;
+                if (individualCooldownSeconds < kit.Cooldown)
+                {
+                    RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
+                    return;
+                }
             }
 
             foreach (KitItem item in kit.Items)
@@ -69,9 +73,9 @@ namespace unturned.ROCKS.Kits
                 }
             }
             RocketChatManager.Say(caller.CSteamID, Kits.Instance.Translate("command_kit_success", kit.Name));
-            kp.SpecificKitCooldown[kit.Name] = DateTime.Now;
-            kp.GlobalKitCooldown = DateTime.Now;
 
+            Kits.GlobalCooldown.Add(caller.CSteamID.ToString(), DateTime.Now);
+            Kits.InvididualCooldown.Add(caller.CSteamID.ToString(), new IndividualKitCooldown() { Cooldown = DateTime.Now, Kit = kit.Name });
         }
     }
 }

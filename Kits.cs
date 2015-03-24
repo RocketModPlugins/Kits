@@ -10,9 +10,17 @@ using System.Linq;
 
 namespace unturned.ROCKS.Kits
 {
+    public class IndividualKitCooldown {
+        public DateTime Cooldown;
+        public string Kit;
+    }
+
     public class Kits : RocketPlugin<KitsConfiguration>
     {
         public static Kits Instance = null;
+
+        public static Dictionary<string, DateTime> GlobalCooldown = new Dictionary<string,DateTime>();
+        public static Dictionary<string, IndividualKitCooldown> InvididualCooldown = new Dictionary<string,IndividualKitCooldown>();
 
         protected override void Load()
         {
