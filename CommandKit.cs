@@ -59,10 +59,10 @@ namespace unturned.ROCKS.Kits
                 }
             }
 
-            KeyValuePair<string, IndividualKitCooldown> individualCooldown = Kits.InvididualCooldown.Where(k => k.Key == caller.ToString() && k.Value.Kit == kit.Name).FirstOrDefault();
-            if (!individualCooldown.Equals(default(KeyValuePair<string, IndividualKitCooldown>)))
+            KeyValuePair<string, DateTime> individualCooldown = Kits.InvididualCooldown.Where(k => k.Key == (caller.ToString() + kit.Name)).FirstOrDefault();
+            if (!individualCooldown.Equals(default(KeyValuePair<string, DateTime>)))
             {
-                double individualCooldownSeconds = (DateTime.Now - individualCooldown.Value.Cooldown).TotalSeconds;
+                double individualCooldownSeconds = (DateTime.Now - individualCooldown.Value).TotalSeconds;
                 if (individualCooldownSeconds < kit.Cooldown)
                 {
                     RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
@@ -79,8 +79,23 @@ namespace unturned.ROCKS.Kits
             }
             RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_success", kit.Name));
 
-            Kits.GlobalCooldown.Add(caller.ToString(), DateTime.Now);
-            Kits.InvididualCooldown.Add(caller.ToString(), new IndividualKitCooldown() { Cooldown = DateTime.Now, Kit = kit.Name });
+            if (Kits.GlobalCooldown.ContainsKey(caller.ToString()))
+            {
+                Kits.GlobalCooldown[caller.ToString()] = DateTime.Now;
+            }
+            else
+            {
+                Kits.GlobalCooldown.Add(caller.ToString(), DateTime.Now);
+            }
+
+            if (Kits.GlobalCooldown.ContainsKey(caller.ToString()))
+            {
+                Kits.InvididualCooldown[caller.ToString() + kit.Name] = DateTime.Now;
+            }
+            else
+            {
+                Kits.InvididualCooldown.Add(caller.ToString() + kit.Name, DateTime.Now);
+            }
         }
     }
 }
