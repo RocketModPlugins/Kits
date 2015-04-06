@@ -25,9 +25,8 @@ namespace unturned.ROCKS.Kits
             get { return false; }
         }
 
-        public void Execute(Steamworks.CSteamID caller, string command)
+        public void Execute(RocketPlayer caller, string command)
         {
-            Player callingPlayer = PlayerTool.getPlayer(caller);
             if (String.IsNullOrEmpty(command.Trim()))
             {
                 RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_invalid_parameter"));
@@ -41,8 +40,7 @@ namespace unturned.ROCKS.Kits
                 return;
             }
 
-            Player player = PlayerTool.getPlayer(caller);
-            bool hasPermissions = RocketPermissionManager.CheckPermissions(player.SteamChannel.SteamPlayer,"kit.*") || RocketPermissionManager.GetPermissions(caller).Where(p => p.ToLower() == ("kit." + command.Trim().ToLower())).FirstOrDefault() != null;
+            bool hasPermissions = RocketPermissionManager.CheckPermissions(caller,"kit.*") || RocketPermissionManager.GetPermissions(caller.CSteamID).Where(p => p.ToLower() == ("kit." + command.Trim().ToLower())).FirstOrDefault() != null;
 
             if (!hasPermissions)
             {
@@ -74,9 +72,9 @@ namespace unturned.ROCKS.Kits
 
             foreach (KitItem item in kit.Items)
             {
-                if (!ItemTool.tryForceGiveItem(player, item.ItemId, item.Amount))
+                if (!ItemTool.tryForceGiveItem(caller.Player, item.ItemId, item.Amount))
                 {
-                    Logger.Log(Kits.Instance.Translate("command_kit_failed_giving_item", callingPlayer.SteamChannel.SteamPlayer.SteamPlayerID.CharacterName, item.ItemId, item.Amount));
+                    Logger.Log(Kits.Instance.Translate("command_kit_failed_giving_item", caller.CharacterName, item.ItemId, item.Amount));
                 }
             }
             RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_success", kit.Name));
