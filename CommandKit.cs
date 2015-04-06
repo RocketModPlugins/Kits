@@ -40,7 +40,7 @@ namespace unturned.ROCKS.Kits
                 return;
             }
 
-            bool hasPermissions = RocketPermissionManager.CheckPermissions(caller,"kit.*") || RocketPermissionManager.GetPermissions(caller.CSteamID).Where(p => p.ToLower() == ("kit." + command.Trim().ToLower())).FirstOrDefault() != null;
+            bool hasPermissions = caller.HasPermission("kit.*") || RocketPermissionManager.GetPermissions(caller.CSteamID).Where(p => p.ToLower() == ("kit." + command.Trim().ToLower())).FirstOrDefault() != null;
 
             if (!hasPermissions)
             {
