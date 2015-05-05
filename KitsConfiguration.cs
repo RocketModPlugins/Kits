@@ -4,11 +4,11 @@ using System.Xml.Serialization;
 
 namespace unturned.ROCKS.Kits
 {
-    public class KitsConfiguration : RocketConfiguration
+    public class KitsConfiguration : IRocketConfiguration
     {
         [XmlArrayItem(ElementName = "Kit")]
         public List<Kit> Kits;
-        public RocketConfiguration DefaultConfiguration
+        public IRocketConfiguration DefaultConfiguration
         {
             get {
                 KitsConfiguration configuration = new KitsConfiguration();
