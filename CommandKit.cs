@@ -25,22 +25,22 @@ namespace unturned.ROCKS.Kits
             get { return false; }
         }
 
-        public void Execute(RocketPlayer caller, string command)
+        public void Execute(RocketPlayer caller, string[] command)
         {
-            if (String.IsNullOrEmpty(command.Trim()))
+            if (command.Length != 1)
             {
                 RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_invalid_parameter"));
                 return;
             }
 
-            Kit kit = Kits.Instance.Configuration.Kits.Where(k => k.Name.ToLower() == command.Trim().ToLower()).FirstOrDefault();
+            Kit kit = Kits.Instance.Configuration.Kits.Where(k => k.Name.ToLower() == command[0].ToLower()).FirstOrDefault();
             if (kit == null)
             {
                 RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_not_found"));
                 return;
             }
 
-            bool hasPermissions = caller.Permissions.Contains("kit.*") || RocketPermissionManager.GetPermissions(caller.CSteamID).Where(p => p.ToLower() == ("kit." + command.Trim().ToLower())).FirstOrDefault() != null;
+            bool hasPermissions = caller.Permissions.Contains("kit.*") || RocketPermissionManager.GetPermissions(caller.CSteamID).Where(p => p.ToLower() == ("kit." + kit.Name.ToLower())).FirstOrDefault() != null;
 
             if (!hasPermissions)
             {
