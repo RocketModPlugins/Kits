@@ -1,14 +1,14 @@
-﻿using Rocket.RocketAPI;
+﻿using Rocket.API;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace unturned.ROCKS.Kits
 {
-    public class KitsConfiguration : IRocketConfiguration
+    public class KitsConfiguration : IRocketPluginConfiguration
     {
         [XmlArrayItem(ElementName = "Kit")]
         public List<Kit> Kits;
-        public IRocketConfiguration DefaultConfiguration
+        public IRocketPluginConfiguration DefaultConfiguration
         {
             get {
                 KitsConfiguration configuration = new KitsConfiguration();

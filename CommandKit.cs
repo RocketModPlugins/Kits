@@ -1,6 +1,8 @@
 ﻿using Rocket;
-using Rocket.Logging;
-using Rocket.RocketAPI;
+using Rocket.Unturned;
+using Rocket.Unturned.Commands;
+using Rocket.Unturned.Logging;
+using Rocket.Unturned.Player;
 using SDG;
 using System;
 using System.Collections.Generic;
@@ -29,22 +31,22 @@ namespace unturned.ROCKS.Kits
         {
             if (command.Length != 1)
             {
-                RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_invalid_parameter"));
+                RocketChat.Say(caller, Kits.Instance.Translate("command_kit_invalid_parameter"));
                 return;
             }
 
             Kit kit = Kits.Instance.Configuration.Kits.Where(k => k.Name.ToLower() == command[0].ToLower()).FirstOrDefault();
             if (kit == null)
             {
-                RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_not_found"));
+                RocketChat.Say(caller, Kits.Instance.Translate("command_kit_not_found"));
                 return;
             }
 
-            bool hasPermissions = caller.Permissions.Contains("kit.*") || RocketPermissionManager.GetPermissions(caller.CSteamID).Where(p => p.ToLower() == ("kit." + kit.Name.ToLower())).FirstOrDefault() != null;
+            bool hasPermissions = caller.HasPermission("kit." + kit.Name.ToLower());
 
             if (!hasPermissions)
             {
-                RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_no_permissions"));
+                RocketChat.Say(caller, Kits.Instance.Translate("command_kit_no_permissions"));
                 return;
             }
 
@@ -54,7 +56,7 @@ namespace unturned.ROCKS.Kits
                 double globalCooldownSeconds = (DateTime.Now - globalCooldown.Value).TotalSeconds;
                 if (globalCooldownSeconds < Kits.Instance.Configuration.GlobalCooldown)
                 {
-                    RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.GlobalCooldown - globalCooldownSeconds)));
+                    RocketChat.Say(caller, Kits.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.GlobalCooldown - globalCooldownSeconds)));
                     return;
                 }
             }
@@ -65,7 +67,7 @@ namespace unturned.ROCKS.Kits
                 double individualCooldownSeconds = (DateTime.Now - individualCooldown.Value).TotalSeconds;
                 if (individualCooldownSeconds < kit.Cooldown)
                 {
-                    RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
+                    RocketChat.Say(caller, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
                     return;
                 }
             }
@@ -77,7 +79,7 @@ namespace unturned.ROCKS.Kits
                     Logger.Log(Kits.Instance.Translate("command_kit_failed_giving_item", caller.CharacterName, item.ItemId, item.Amount));
                 }
             }
-            RocketChatManager.Say(caller, Kits.Instance.Translate("command_kit_success", kit.Name));
+            RocketChat.Say(caller, Kits.Instance.Translate("command_kit_success", kit.Name));
 
             if (Kits.GlobalCooldown.ContainsKey(caller.ToString()))
             {
