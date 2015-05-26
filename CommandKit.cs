@@ -19,7 +19,12 @@ namespace unturned.ROCKS.Kits
 
         public string Name
         {
-            get { return "kit";}
+            get { return "kit"; }
+        }
+
+        public string Syntax
+        {
+            get { return "<kit>"; }
         }
 
         public bool RunFromConsole
