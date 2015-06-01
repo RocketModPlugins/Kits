@@ -31,6 +31,10 @@ namespace unturned.ROCKS.Kits
         {
             get { return false; }
         }
+        public List<string> Aliases
+        {
+            get { return new List<string>(); }
+        }
 
         public void Execute(RocketPlayer caller, string[] command)
         {
