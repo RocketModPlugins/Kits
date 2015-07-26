@@ -1,9 +1,7 @@
-﻿using Rocket.Unturned.Plugins;
-using SDG;
-using Steamworks;
+﻿using Rocket.API.Collections;
+using Rocket.Core.Plugins;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace unturned.ROCKS.Kits
 {
@@ -19,11 +17,11 @@ namespace unturned.ROCKS.Kits
             Instance = this;
         }
 
-        public override Dictionary<string, string> DefaultTranslations
+        public override TranslationList DefaultTranslations
         {
             get
             {
-                return new Dictionary<string, string>(){
+                return new TranslationList(){
                     {"command_kit_invalid_parameter","Invalid parameter, specify a kit with /kit <name>"},
                     {"command_kit_not_found","Kit not found"},
                     {"command_kit_no_permissions","You don't have permissions to use this kit"},

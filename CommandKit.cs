@@ -1,9 +1,7 @@
-﻿using Rocket;
-using Rocket.Unturned;
-using Rocket.Unturned.Commands;
-using Rocket.Unturned.Logging;
+﻿using Rocket.API;
+using Rocket.Core.Logging;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
-using SDG;
 using SDG.Unturned;
 using System;
 using System.Collections.Generic;
@@ -37,18 +35,35 @@ namespace unturned.ROCKS.Kits
             get { return new List<string>(); }
         }
 
-        public void Execute(RocketPlayer caller, string[] command)
+        public bool AllowFromConsole
         {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public List<string> Permissions
+        {
+            get
+            {
+                return new List<string>() { "kits.kit" };
+            }
+        }
+
+        public void Execute(IRocketPlayer caller, string[] command)
+        {
+            UnturnedPlayer player = (UnturnedPlayer)caller;
             if (command.Length != 1)
             {
-                RocketChat.Say(caller, Kits.Instance.Translate("command_kit_invalid_parameter"));
+                UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_invalid_parameter"));
                 return;
             }
 
-            Kit kit = Kits.Instance.Configuration.Kits.Where(k => k.Name.ToLower() == command[0].ToLower()).FirstOrDefault();
+            Kit kit = Kits.Instance.Configuration.Instance.Kits.Where(k => k.Name.ToLower() == command[0].ToLower()).FirstOrDefault();
             if (kit == null)
             {
-                RocketChat.Say(caller, Kits.Instance.Translate("command_kit_not_found"));
+                UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_not_found"));
                 return;
             }
 
@@ -56,7 +71,7 @@ namespace unturned.ROCKS.Kits
 
             if (!hasPermissions)
             {
-                RocketChat.Say(caller, Kits.Instance.Translate("command_kit_no_permissions"));
+                UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_no_permissions"));
                 return;
             }
 
@@ -64,9 +79,9 @@ namespace unturned.ROCKS.Kits
             if (!globalCooldown.Equals(default(KeyValuePair<string, DateTime>)))
             {
                 double globalCooldownSeconds = (DateTime.Now - globalCooldown.Value).TotalSeconds;
-                if (globalCooldownSeconds < Kits.Instance.Configuration.GlobalCooldown)
+                if (globalCooldownSeconds < Kits.Instance.Configuration.Instance.GlobalCooldown)
                 {
-                    RocketChat.Say(caller, Kits.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.GlobalCooldown - globalCooldownSeconds)));
+                    UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.Instance.GlobalCooldown - globalCooldownSeconds)));
                     return;
                 }
             }
@@ -77,19 +92,20 @@ namespace unturned.ROCKS.Kits
                 double individualCooldownSeconds = (DateTime.Now - individualCooldown.Value).TotalSeconds;
                 if (individualCooldownSeconds < kit.Cooldown)
                 {
-                    RocketChat.Say(caller, Kits.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
+                    UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
                     return;
                 }
             }
 
             foreach (KitItem item in kit.Items)
             {
-                if (!ItemTool.tryForceGiveItem(caller.Player, item.ItemId, item.Amount))
+                
+                if (!player.GiveItem(item.ItemId, item.Amount))
                 {
-                    Logger.Log(Kits.Instance.Translate("command_kit_failed_giving_item", caller.CharacterName, item.ItemId, item.Amount));
+                    Logger.Log(Kits.Instance.Translations.Instance.Translate("command_kit_failed_giving_item", player.CharacterName, item.ItemId, item.Amount));
                 }
             }
-            RocketChat.Say(caller, Kits.Instance.Translate("command_kit_success", kit.Name));
+            UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_success", kit.Name));
 
             if (Kits.GlobalCooldown.ContainsKey(caller.ToString()))
             {
