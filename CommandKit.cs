@@ -39,7 +39,7 @@ namespace unturned.ROCKS.Kits
         {
             get
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
 
