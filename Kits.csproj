@@ -7,7 +7,7 @@
     <ProjectGuid>{2D98D5E7-1928-4D09-881D-AA64A3AA0AB9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>unturned.ROCKS.Kits</RootNamespace>
+    <RootNamespace>fr34kyn01535.Kits</RootNamespace>
     <AssemblyName>Kits</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

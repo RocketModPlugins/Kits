@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System;
 
-namespace unturned.ROCKS.Kits
+namespace fr34kyn01535.Kits
 {
     public class KitsConfiguration : IRocketPluginConfiguration
     {

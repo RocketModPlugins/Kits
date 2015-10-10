@@ -2,12 +2,11 @@
 using Rocket.Core.Logging;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
-using SDG.Unturned;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace unturned.ROCKS.Kits
+namespace fr34kyn01535.Kits
 {
     public class CommandKit : IRocketCommand
     {

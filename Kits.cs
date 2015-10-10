@@ -3,7 +3,7 @@ using Rocket.Core.Plugins;
 using System;
 using System.Collections.Generic;
 
-namespace unturned.ROCKS.Kits
+namespace fr34kyn01535.Kits
 {
     public class Kits : RocketPlugin<KitsConfiguration>
     {
