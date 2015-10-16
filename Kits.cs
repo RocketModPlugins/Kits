@@ -28,7 +28,8 @@ namespace fr34kyn01535.Kits
                     {"command_kit_cooldown_command","You have to wait {0} seconds to use this command again"},
                     {"command_kit_cooldown_kit","You have to wait {0} seconds to get this kit again"},
                     {"command_kit_failed_giving_item","Failed giving a item to {0} ({1},{2})"},
-                    {"command_kit_success","You just received the kit {0}" }
+                    {"command_kit_success","You just received the kit {0}" },
+                    {"command_kits","You have access to the following kits: {0}" }
                 };
             }
         }

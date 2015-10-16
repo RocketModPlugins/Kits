@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandKits.cs" />
     <Compile Include="CommandKit.cs" />
     <Compile Include="KitsConfiguration.cs" />
     <Compile Include="Kits.cs" />
