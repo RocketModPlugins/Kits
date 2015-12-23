@@ -34,12 +34,9 @@ namespace fr34kyn01535.Kits
             get { return new List<string>(); }
         }
 
-        public bool AllowFromConsole
+        public AllowedCaller AllowedCaller
         {
-            get
-            {
-                return false;
-            }
+            get { return Rocket.API.AllowedCaller.Player; }
         }
 
         public List<string> Permissions
