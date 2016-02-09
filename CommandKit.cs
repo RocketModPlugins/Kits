@@ -101,6 +101,9 @@ namespace fr34kyn01535.Kits
                     Logger.Log(Kits.Instance.Translations.Instance.Translate("command_kit_failed_giving_item", player.CharacterName, item.ItemId, item.Amount));
                 }
             }
+
+            player.Experience += kit.XP;
+
             UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_success", kit.Name));
 
             if (Kits.GlobalCooldown.ContainsKey(caller.ToString()))
