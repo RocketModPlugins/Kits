@@ -95,14 +95,34 @@ namespace fr34kyn01535.Kits
 
             foreach (KitItem item in kit.Items)
             {
-                
-                if (!player.GiveItem(item.ItemId, item.Amount))
+
+                try
                 {
-                    Logger.Log(Kits.Instance.Translations.Instance.Translate("command_kit_failed_giving_item", player.CharacterName, item.ItemId, item.Amount));
+                    if (!player.GiveItem(item.ItemId, item.Amount))
+                    {
+                        Logger.Log(Kits.Instance.Translations.Instance.Translate("command_kit_failed_giving_item", player.CharacterName, item.ItemId, item.Amount));
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex, "Failed giving item "+item.ItemId+" to player");
+                }
+
             }
 
-            player.Experience += kit.XP;
+            if (kit.XP.HasValue)
+                player.Experience += kit.XP.Value;
+
+            if (kit.Vehicle.HasValue) {
+                try
+                {
+                    player.GiveVehicle(kit.Vehicle.Value);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex, "Failed giving vehicle " + kit.Vehicle.Value + " to player");
+                }
+            }
 
             UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_success", kit.Name));
 
