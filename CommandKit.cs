@@ -100,13 +100,11 @@ namespace fr34kyn01535.Kits
                 Kits.ExecuteDependencyCode("Uconomy",(IRocketPlugin plugin) =>
                 {
                     Uconomy.Uconomy Uconomy = (Uconomy.Uconomy)plugin;
-                    if(kit.Money<0){
-                        if ((Uconomy.Database.GetBalance(player.CSteamID.ToString()) - kit.Money) < 0)
-                        {
-                            cancelBecauseNotEnoughtMoney = true;
-                            UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_no_money", kit.Money,Uconomy.Configuration.Instance.MoneyName));
-                            return;
-                        }
+                    if ((Uconomy.Database.GetBalance(player.CSteamID.ToString()) + kit.Money.Value) < 0)
+                    {
+                        cancelBecauseNotEnoughtMoney = true;
+                        UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_no_money", kit.Money,Uconomy.Configuration.Instance.MoneyName));
+                        return;
                     }
                     Uconomy.Database.IncreaseBalance(player.CSteamID.ToString(), kit.Money.Value);
                 });
