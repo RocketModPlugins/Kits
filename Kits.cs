@@ -41,9 +41,9 @@ namespace fr34kyn01535.Kits
                     {"command_kit_failed_giving_item","Failed giving a item to {0} ({1},{2})"},
                     {"command_kit_success","You just received the kit {0}" },
                     {"command_kits","You have access to the following kits: {0}" },
-                    {"command_kit_no_money","You can't afford this kit. You need atleast {0} {1}." }
-
-                    
+                    {"command_kit_no_money","You can't afford the kit {2}. You need atleast {0} {1}." },
+                    {"command_kit_money","You have received {0} {1} from the kit {2}." },
+                    {"command_kit_xp","You have received {0} xp from the kit {1}." }
                 };
             }
         }

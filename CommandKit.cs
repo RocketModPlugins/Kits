@@ -103,10 +103,15 @@ namespace fr34kyn01535.Kits
                     if ((Uconomy.Database.GetBalance(player.CSteamID.ToString()) + kit.Money.Value) < 0)
                     {
                         cancelBecauseNotEnoughtMoney = true;
-                        UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_no_money", kit.Money,Uconomy.Configuration.Instance.MoneyName));
+                        UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_no_money", Math.Abs(kit.Money.Value), Uconomy.Configuration.Instance.MoneyName, kit.Name));
                         return;
                     }
+                    else
+                    {
+                        UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_money", kit.Money.Value, Uconomy.Configuration.Instance.MoneyName, kit.Name));
+                    }
                     Uconomy.Database.IncreaseBalance(player.CSteamID.ToString(), kit.Money.Value);
+
                 });
             }
 
@@ -133,7 +138,10 @@ namespace fr34kyn01535.Kits
             }
 
             if (kit.XP.HasValue)
+            {
                 player.Experience += kit.XP.Value;
+                UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_xp", kit.Name, kit.XP.Value));
+            }
 
             if (kit.Vehicle.HasValue) {
                 try
