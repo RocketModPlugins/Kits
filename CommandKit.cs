@@ -53,14 +53,14 @@ namespace fr34kyn01535.Kits
             if (command.Length != 1)
             {
                 UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_invalid_parameter"));
-                return;
+                throw new WrongUsageOfCommandException(caller, this);
             }
 
             Kit kit = Kits.Instance.Configuration.Instance.Kits.Where(k => k.Name.ToLower() == command[0].ToLower()).FirstOrDefault();
             if (kit == null)
             {
                 UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_not_found"));
-                return;
+                throw new WrongUsageOfCommandException(caller, this);
             }
 
             bool hasPermissions = caller.HasPermission("kit." + kit.Name.ToLower());
@@ -68,7 +68,7 @@ namespace fr34kyn01535.Kits
             if (!hasPermissions)
             {
                 UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_no_permissions"));
-                return;
+                throw new NoPermissionsForCommandException(caller, this);
             }
 
             KeyValuePair<string, DateTime> globalCooldown = Kits.GlobalCooldown.Where(k => k.Key == caller.ToString()).FirstOrDefault();
@@ -117,7 +117,7 @@ namespace fr34kyn01535.Kits
 
             if (cancelBecauseNotEnoughtMoney)
             {
-                return;
+                throw new WrongUsageOfCommandException(caller, this);
             }
 
             foreach (KitItem item in kit.Items)
