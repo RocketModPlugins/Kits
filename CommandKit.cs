@@ -114,10 +114,10 @@ namespace fr34kyn01535.Kits
 
             }
 
-            if (kit.XP.HasValue)
+            if (kit.XP.HasValue && kit.XP != 0)
             {
                 player.Experience += kit.XP.Value;
-                UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_xp", kit.Name, kit.XP.Value));
+                UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_xp",  kit.XP.Value, kit.Name));
             }
 
             if (kit.Vehicle.HasValue) {
