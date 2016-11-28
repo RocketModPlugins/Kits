@@ -63,7 +63,7 @@ namespace fr34kyn01535.Kits
                 throw new WrongUsageOfCommandException(caller, this);
             }
 
-            bool hasPermissions = caller.HasPermission("kit." + kit.Name.ToLower());
+            bool hasPermissions = caller.HasPermission("kit.*") | caller.HasPermission("kit." + kit.Name.ToLower());
 
             if (!hasPermissions)
             {
