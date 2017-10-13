@@ -52,8 +52,8 @@ namespace fr34kyn01535.Kits
             UnturnedPlayer player = (UnturnedPlayer)caller;
 
             List<string> availableKits = new List<string>();
-
-            foreach(Kit kit in Kits.Instance.Configuration.Instance.Kits)
+            List<Kit> kits = Kits.Instance.Configuration.Instance.Kits;
+            foreach(Kit kit in kits)
             {
                 if(caller.HasPermission("kit." + kit.Name.ToLower()))
                 {
