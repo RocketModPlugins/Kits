@@ -47,6 +47,24 @@ namespace fr34kyn01535.Kits
             }
         }
 
+        public string TimeString(int totalSeconds) {
+            var timeSpan = TimeSpan.FromSeconds(totalSeconds);
+            int days = (int)timeSpan.TotalDays;
+            int hours = timeSpan.Hours;
+            int minutes = timeSpan.Minutes;
+            int seconds = timeSpan.Seconds;
+
+            string daysString = PartialTimeString(days, "day", ", ");
+            string hoursString = PartialTimeString(hours, "hour", ", ");
+            string minutesString = PartialTimeString(minutes, "minute", " and ");
+            string secondsString = PartialTimeString(seconds, "second", "", false);
+            return daysString + hoursString + minutesString + secondsString;
+        }
+
+        public string PartialTimeString(int value, string singularString, string suffixString = "", bool emptyOnZero = true) {
+            return !emptyOnZero || value > 0 ? value + " " + singularString + (value == 1 ? "" : "s") + suffixString : "";
+        }
+
         public void Execute(IRocketPlayer caller, string[] command)
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
@@ -77,7 +95,7 @@ namespace fr34kyn01535.Kits
                 double globalCooldownSeconds = (DateTime.Now - globalCooldown.Value).TotalSeconds;
                 if (globalCooldownSeconds < Kits.Instance.Configuration.Instance.GlobalCooldown)
                 {
-                    UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_cooldown_command", (int)(Kits.Instance.Configuration.Instance.GlobalCooldown - globalCooldownSeconds)));
+                    UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_cooldown_command", TimeString((int)(Kits.Instance.Configuration.Instance.GlobalCooldown - globalCooldownSeconds))));
                     return;
                 }
             }
@@ -88,7 +106,7 @@ namespace fr34kyn01535.Kits
                 double individualCooldownSeconds = (DateTime.Now - individualCooldown.Value).TotalSeconds;
                 if (individualCooldownSeconds < kit.Cooldown)
                 {
-                    UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_cooldown_kit", (int)(kit.Cooldown - individualCooldownSeconds)));
+                    UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kit_cooldown_kit", TimeString((int)(kit.Cooldown - individualCooldownSeconds))));
                     return;
                 }
             }
