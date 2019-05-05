@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 
 namespace fr34kyn01535.Kits
-{
+{ 
     public class Kits : RocketPlugin<KitsConfiguration>
     {
         public static Kits Instance = null;
