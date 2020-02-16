@@ -1,4 +1,5 @@
 ﻿using Rocket.API;
+using Rocket.API.Serialisation;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
@@ -53,15 +54,34 @@ namespace fr34kyn01535.Kits
 
             List<string> availableKits = new List<string>();
             List<Kit> kits = Kits.Instance.Configuration.Instance.Kits;
-            foreach(Kit kit in kits)
+
+            // Gets all caller's permissions
+            List<Permission> callerPerms = caller.GetPermissions().Distinct(new PermissionComparer()).ToList();
+
+            foreach (var item in kits)
             {
-                if(caller.HasPermission("kit." + kit.Name.ToLower()))
-                {
-                    availableKits.Add(kit.Name);
-                }
+                // Adds the kit if it's permission is contained in the caller's permission list
+                if (callerPerms.Exists(x => x.Name == $"kit.{item.Name.ToLower()}"))
+                    availableKits.Add(item.Name);
             }
 
             UnturnedChat.Say(caller, Kits.Instance.Translations.Instance.Translate("command_kits", String.Join(", ",availableKits.ToArray())));
+        }
+    }
+
+    /// <summary>
+    /// Provides the comparison method for Rocket's Permission
+    /// </summary>
+    internal class PermissionComparer : IEqualityComparer<Permission>
+    {
+        public bool Equals(Permission x, Permission y)
+        {
+            return x.Name == y.Name && x.Cooldown == y.Cooldown;
+        }
+
+        public int GetHashCode(Permission obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }
